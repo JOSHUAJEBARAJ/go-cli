@@ -50,20 +50,25 @@ func wordCounter(r io.Reader) (int, error) {
 	}
 	return count, nil
 }
-func main() {
-	var lFlag = flag.String("l", "", "use to find the line count")
-	flag.Parse()
-	file, err := open_file(*lFlag)
-	checkError(err)
-	lc, err := lineCounter(file)
-	checkError(err)
-	// moving the cursor to the begining
-	file.Seek(0, io.SeekStart)
-	fmt.Println(lc, *lFlag)
-	wc, err := wordCounter(file)
-	checkError(err)
-	println(wc)
 
+func charCounter(r io.Reader) (int, error) {
+	scanner := bufio.NewScanner(r)
+	count := 0
+	// split through words
+	scanner.Split(bufio.ScanBytes)
+	for scanner.Scan() {
+		count++
+	}
+	return count, nil
+}
+func main() {
+	if len(os.Args) < 1 {
+		fmt.Print("TBD")
+	}
+	var lFlag = flag.Bool("l", false, "use to find the line count")
+	flag.Parse()
+	_ = lFlag
+	fmt.Println(os.Args[1])
 }
 
 func checkError(er error) {
