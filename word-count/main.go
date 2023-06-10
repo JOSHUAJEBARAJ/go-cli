@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"bytes"
 	"flag"
 	"fmt"
@@ -18,7 +19,7 @@ func open_file(filename string) (*os.File, error) {
 	return newFile, nil
 }
 
-func LineCounter(r io.Reader) (int, error) {
+func lineCounter(r io.Reader) (int, error) {
 	// create a buffer
 	buf := make([]byte, 32*1024)
 	count := 0
@@ -38,16 +39,35 @@ func LineCounter(r io.Reader) (int, error) {
 		}
 	}
 }
+
+func wordCounter(r io.Reader) (int, error) {
+	scanner := bufio.NewScanner(r)
+	count := 0
+	// split through words
+	scanner.Split(bufio.ScanWords)
+	for scanner.Scan() {
+		count++
+	}
+	return count, nil
+}
 func main() {
 	var lFlag = flag.String("l", "", "use to find the line count")
 	flag.Parse()
 	file, err := open_file(*lFlag)
-	if err != nil {
-		log.Fatal(err)
-	}
-	lc, err := LineCounter(file)
-	if err != nil {
-		log.Fatal(err)
-	}
+	checkError(err)
+	lc, err := lineCounter(file)
+	checkError(err)
+	// moving the cursor to the begining
+	file.Seek(0, io.SeekStart)
 	fmt.Println(lc, *lFlag)
+	wc, err := wordCounter(file)
+	checkError(err)
+	println(wc)
+
+}
+
+func checkError(er error) {
+	if er != nil {
+		log.Fatal(er)
+	}
 }
