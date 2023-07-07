@@ -1,4 +1,8 @@
-## File structure ​ 	
+## Organizing Your Code
+
+1. Put the Business Logic in the different ​package and cli in the different package
+
+
 
 todo
 ​ 	├── cmd
