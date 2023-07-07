@@ -8,7 +8,7 @@ import (
 	"os"
 )
 
-func Count(r io.Reader, l bool, b bool) int {
+func count(r io.Reader, l bool, b bool) int {
 	// read the file from the input
 	scanner := bufio.NewScanner(r)
 
