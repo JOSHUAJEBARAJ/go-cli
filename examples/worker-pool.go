@@ -6,8 +6,8 @@ import (
 )
 
 /** code explanation
-First going to spin three go routines
 Next going to load the data in the jobs channel (input)
+First going to spin three go routines
 Next we are going to close the job channel, This is necessary for the for run loop
 Next the worker will start execute
 **/
@@ -15,13 +15,13 @@ func main() {
 	const numJobs = 10
 	jobsChan := make(chan int, numJobs)
 	completedJobsChan := make(chan int, numJobs)
+	for j := 1; j <= numJobs; j++ {
+		jobsChan <- j
+	}
 	for w := 1; w <= 3; w++ {
 		go worker(w, jobsChan, completedJobsChan)
 	}
 
-	for j := 1; j <= numJobs; j++ {
-		jobsChan <- j
-	}
 	close(jobsChan)
 	for a := 1; a <= numJobs; a++ {
 		<-completedJobsChan
